@@ -6,6 +6,7 @@ android {
 
 
 
+    namespace "com.iammert.rangeview.library"
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
