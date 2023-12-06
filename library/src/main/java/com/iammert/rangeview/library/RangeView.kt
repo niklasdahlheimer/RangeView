@@ -184,6 +184,7 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     else -> DraggingStateData.idle()
                 }
             }
+
             MotionEvent.ACTION_MOVE -> {
                 when (draggingStateData.draggingState) {
                     DraggingState.DRAGGING_CONFLICT_TOGGLE -> {
@@ -197,12 +198,14 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                                 draggingLeftToggle(event)
                                 DraggingStateData.left(event)
                             }
+
                             Direction.RIGHT -> {
                                 draggingRightToggle(event)
                                 DraggingStateData.right(event)
                             }
                         }
                     }
+
                     DraggingState.DRAGGING_RIGHT_TOGGLE -> {
                         if (isRightToggleExceed(event)) {
                             return true
@@ -210,6 +213,7 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                             draggingRightToggle(event)
                         }
                     }
+
                     DraggingState.DRAGGING_LEFT_TOGGLE -> {
                         if (isLeftToggleExceed(event)) {
                             return true
@@ -217,10 +221,12 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                             draggingLeftToggle(event)
                         }
                     }
+
                     else -> {
                     }
                 }
             }
+
             MotionEvent.ACTION_UP -> {
                 rangeDraggingChangeListener?.onDraggingStateChanged(DraggingState.DRAGGING_END)
                 draggingStateData = DraggingStateData.idle()
