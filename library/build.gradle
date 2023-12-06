@@ -2,14 +2,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
-
-
 
     namespace "com.iammert.rangeview.library"
     defaultConfig {
+        compileSdk 33
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
