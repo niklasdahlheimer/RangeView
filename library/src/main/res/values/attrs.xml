@@ -5,8 +5,12 @@
 
         <attr name="colorBackground" format="color" />
         <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
         <attr name="minValue" format="float" />
         <attr name="maxValue" format="float" />
+        <attr name="horizontalSpace" format="dimension" />
+        <attr name="strokeCornerRadius" format="dimension" />
+        <attr name="backgroundCornerRadius" format="dimension" />
 
     </declare-styleable>
 

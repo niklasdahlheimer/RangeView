@@ -56,6 +56,10 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private var horizontalMargin: Float = resources.getDimension(R.dimen.rangeView_HorizontalSpace)
 
+    private var strokeCornerRadius: Float = resources.getDimension(R.dimen.rangeView_strokeCornerRadius)
+
+    private var backgroundCornerRadius: Float = resources.getDimension(R.dimen.rangeView_backgroundCornerRadius)
+
     private var bitmap: Bitmap? = null
 
     private var canvas: Canvas? = null
@@ -105,11 +109,16 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val a = context.obtainStyledAttributes(attrs, R.styleable.RangeView)
         bgColor = a.getColor(R.styleable.RangeView_colorBackground, bgColor)
         strokeColor = a.getColor(R.styleable.RangeView_strokeColor, strokeColor)
+        strokeWidth = a.getDimension(R.styleable.RangeView_strokeWidth, strokeWidth)
         minValue = a.getFloat(R.styleable.RangeView_minValue, minValue)
         maxValue = a.getFloat(R.styleable.RangeView_maxValue, maxValue)
+        strokeCornerRadius = a.getDimension(R.styleable.RangeView_strokeCornerRadius, strokeCornerRadius)
+        backgroundCornerRadius = a.getDimension(R.styleable.RangeView_backgroundCornerRadius, backgroundCornerRadius)
+        horizontalMargin = a.getDimension(R.styleable.RangeView_horizontalSpace, horizontalMargin)
 
         backgroundPaint.color = bgColor
         rangeStrokePaint.color = strokeColor
+        rangeStrokePaint.strokeWidth = strokeWidth
         rangeTogglePaint.color = strokeColor
         a.recycle()
     }
@@ -147,17 +156,17 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
         //Draw background color
         this.backgroundCanvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-        this.backgroundCanvas?.drawRect(totalValueRect, backgroundPaint)
+        this.backgroundCanvas?.drawRoundRect(totalValueRect, backgroundCornerRadius, backgroundCornerRadius, backgroundPaint)
 
         //Draw mask
         this.canvas?.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-        this.canvas?.drawRect(totalValueRect, maskPaint)
+        this.canvas?.drawRoundRect(totalValueRect, backgroundCornerRadius, backgroundCornerRadius, maskPaint)
 
         //Clear range rectangle
-        this.canvas?.drawRect(rangeValueRectF, eraser)
+        this.canvas?.drawRoundRect(rangeValueRectF, strokeCornerRadius, strokeCornerRadius, eraser)
 
         //Draw range rectangle stroke
-        this.canvas?.drawRect(rangeStrokeRectF, rangeStrokePaint)
+        this.canvas?.drawRoundRect(rangeStrokeRectF, strokeCornerRadius, strokeCornerRadius, rangeStrokePaint)
 
         //Draw left toggle over range stroke
         val cxLeft = rangeValueRectF.left
