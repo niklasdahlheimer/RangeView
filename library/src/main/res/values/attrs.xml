@@ -5,6 +5,7 @@
 
         <attr name="colorBackground" format="color" />
         <attr name="strokeColor" format="color" />
+        <attr name="rippleColor" format="color" />
         <attr name="strokeWidth" format="dimension" />
         <attr name="minValue" format="float" />
         <attr name="maxValue" format="float" />

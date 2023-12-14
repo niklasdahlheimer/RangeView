@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="rangeView_HorizontalSpace">24dp</dimen>
-    <dimen name="rangeView_StrokeWidth">4dp</dimen>
-    <dimen name="rangeView_ToggleRadius">8dp</dimen>
-    <dimen name="rangeView_strokeCornerRadius">8dp</dimen>
-    <dimen name="rangeView_backgroundCornerRadius">0dp</dimen>
+    <dimen name="rangeView_StrokeWidth">2dp</dimen>
+    <dimen name="rangeView_ToggleRadius">4dp</dimen>
+    <dimen name="rangeView_ToggleWidth">16dp</dimen>
+    <dimen name="rangeView_strokeCornerRadius">2dp</dimen>
+    <dimen name="rangeView_backgroundCornerRadius">2dp</dimen>
 </resources>

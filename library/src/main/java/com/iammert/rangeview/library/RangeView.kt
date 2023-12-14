@@ -50,9 +50,13 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private var maskColor: Int = ContextCompat.getColor(context, R.color.rangeView_colorMask)
 
+    private var rippleColor: Int = ContextCompat.getColor(context, R.color.rangeView_colorRipple)
+
     private var strokeWidth: Float = resources.getDimension(R.dimen.rangeView_StrokeWidth)
 
     private var toggleRadius: Float = resources.getDimension(R.dimen.rangeView_ToggleRadius)
+
+    private var toggleWidth: Float = resources.getDimension(R.dimen.rangeView_ToggleWidth)
 
     private var horizontalMargin: Float = resources.getDimension(R.dimen.rangeView_HorizontalSpace)
 
@@ -67,6 +71,8 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     private var backgroundBitmap: Bitmap? = null
 
     private var backgroundCanvas: Canvas? = null
+
+    private var touchSizeFactor = 2f;
 
     private val eraser: Paint = Paint().apply {
         color = -0x1
@@ -97,6 +103,13 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         flags = Paint.ANTI_ALIAS_FLAG
     }
 
+    private var ripplePaint: Paint = Paint().apply {
+        style = Paint.Style.FILL
+        strokeWidth = 4f
+        color = rippleColor
+        flags = Paint.ANTI_ALIAS_FLAG
+    }
+
     private var draggingStateData: DraggingStateData = DraggingStateData.idle()
 
     private val totalValueRect: RectF = RectF()
@@ -109,6 +122,7 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val a = context.obtainStyledAttributes(attrs, R.styleable.RangeView)
         bgColor = a.getColor(R.styleable.RangeView_colorBackground, bgColor)
         strokeColor = a.getColor(R.styleable.RangeView_strokeColor, strokeColor)
+        rippleColor = a.getColor(R.styleable.RangeView_rippleColor, rippleColor)
         strokeWidth = a.getDimension(R.styleable.RangeView_strokeWidth, strokeWidth)
         minValue = a.getFloat(R.styleable.RangeView_minValue, minValue)
         maxValue = a.getFloat(R.styleable.RangeView_maxValue, maxValue)
@@ -120,6 +134,7 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         rangeStrokePaint.color = strokeColor
         rangeStrokePaint.strokeWidth = strokeWidth
         rangeTogglePaint.color = strokeColor
+        ripplePaint.color = rippleColor
         a.recycle()
     }
 
@@ -168,15 +183,39 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         //Draw range rectangle stroke
         this.canvas?.drawRoundRect(rangeStrokeRectF, strokeCornerRadius, strokeCornerRadius, rangeStrokePaint)
 
+
         //Draw left toggle over range stroke
-        val cxLeft = rangeValueRectF.left
-        val cyLeft = height.toFloat() / 2
-        this.canvas?.drawCircle(cxLeft, cyLeft, toggleRadius, rangeTogglePaint)
+        this.canvas?.drawRoundRect(
+                rangeValueRectF.left,
+                height.toFloat(),
+                rangeValueRectF.left + toggleWidth,
+                0f,
+                toggleRadius, toggleRadius,
+                rangeTogglePaint)
 
         //Draw right toggle over range stroke
-        val cxRight = rangeValueRectF.right
-        val cyRight = height.toFloat() / 2
-        this.canvas?.drawCircle(cxRight, cyRight, toggleRadius, rangeTogglePaint)
+        this.canvas?.drawRoundRect(
+                rangeValueRectF.right - toggleWidth,
+                height.toFloat(),
+                rangeValueRectF.right,
+                0f,
+                toggleRadius, toggleRadius,
+                rangeTogglePaint)
+
+        //Draw ripples on toggles
+        val lineYTop = height.toFloat() * (1 / 3f)
+        val lineYBottom = height.toFloat() * (2 / 3f)
+        val lineX1 = rangeValueRectF.left + (toggleWidth / 2) - (toggleWidth / 10)
+        val lineX2 = rangeValueRectF.left + (toggleWidth / 2) + (toggleWidth / 10)
+        val lineX3 = rangeValueRectF.right - (toggleWidth / 2) - (toggleWidth / 10)
+        val lineX4 = rangeValueRectF.right - (toggleWidth / 2) + (toggleWidth / 10)
+        this.canvas?.drawLines(floatArrayOf(
+                lineX1, lineYTop, lineX1, lineYBottom,
+                lineX2, lineYTop, lineX2, lineYBottom,
+                lineX3, lineYTop, lineX3, lineYBottom,
+                lineX4, lineYTop, lineX4, lineYBottom,
+        ), ripplePaint)
+
 
         //Draw background bitmap to original canvas
         backgroundBitmap?.let {
@@ -322,11 +361,11 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun isTouchOnLeftToggle(motionEvent: MotionEvent): Boolean {
-        return motionEvent.x > rangeValueRectF.left - toggleRadius && motionEvent.x < rangeValueRectF.left + toggleRadius
+        return motionEvent.x > rangeValueRectF.left - (toggleWidth * touchSizeFactor) && motionEvent.x < rangeValueRectF.left + toggleWidth + (toggleWidth * touchSizeFactor)
     }
 
     private fun isTouchOnRightToggle(motionEvent: MotionEvent): Boolean {
-        return motionEvent.x > rangeValueRectF.right - toggleRadius && motionEvent.x < rangeValueRectF.right + toggleRadius
+        return motionEvent.x > rangeValueRectF.right - toggleWidth - (toggleWidth * touchSizeFactor) && motionEvent.x < rangeValueRectF.right + (toggleWidth * touchSizeFactor)
     }
 
     private fun getLeftValue(): Float {
