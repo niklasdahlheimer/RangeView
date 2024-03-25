@@ -40,9 +40,11 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     private var minValue: Float = DEFAULT_MIN_VALUE
 
-    private var currentLeftValue: Float? = null
+    var currentLeftValue: Float? = null
+        private set
 
-    private var currentRightValue: Float? = null
+    var currentRightValue: Float? = null
+        private set
 
     private var bgColor: Int = ContextCompat.getColor(context, R.color.rangeView_colorBackground)
 
