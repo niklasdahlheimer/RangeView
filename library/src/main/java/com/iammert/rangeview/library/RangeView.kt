@@ -36,9 +36,11 @@ class RangeView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     var rangeDraggingChangeListener: OnRangeDraggingListener? = null
 
-    private var maxValue: Float = DEFAULT_MAX_VALUE
+    var maxValue: Float = DEFAULT_MAX_VALUE
+        private set
 
-    private var minValue: Float = DEFAULT_MIN_VALUE
+     var minValue: Float = DEFAULT_MIN_VALUE
+         private set
 
     var currentLeftValue: Float? = null
         private set
